@@ -1495,23 +1495,32 @@ Aurora is the AWS flagship DB known to combine the performance and availability 
 * **Aurora replication differs from RDS replicas in the sense that it is possible for Aurora's replicas to be both a standby as part of a multi-AZ configuration as well as a target for read traffic. In RDS, the multi-AZ standby cannot be configured to be a read endpoint and only read replicas can serve that function.**
 * With Aurora replication, you can have up to fifteen copies. If you want downstream MySQL or PostgreSQL as you replicated copies, then you can only have 5 or 1.
 * Automated failover is only possible with Aurora read replication
-
-For more on the differences between RDS replication and Aurora Replication, please consult the following:
-![img](imgs/aurora-vs-rds.png)
-
 * Automated backups are always enabled on Aurora instances and backups don’t impact DB performance. You can also take snapshots which also don’t impact performance. Your snapshots can be shared across AWS accounts.
 * A common tactic for migrating RDS DBs into Aurora RDs is to create a read replica of a RDS MariaDB/MySQL DB as an Aurora DB. Then simply promote the Aurora DB into a production instance and delete the old MariaDB/MySQL DB.
 * **Aurora starts w/ 10GB and scales per 10GB all the way to 64 TB via storage autoscaling. Aurora's computing power scales up to 32vCPUs and 244GB memory**
 
+#### Aurora vs RDS
 
-### Aurora Serverless:
+|Feature | Aurora | RDS|
+|--------|--------|----|
+| Number of Replicas | upto 15 | upto 5 |
+| Replication Type | Asynchronous (milliseconds) | Asynchronous (seconds) |
+| Performance impact on Primary| Low | High |
+| Replica location | In region | Cross-region|
+| Act as failover target| Yes (no data loss) | Yes (potentially minutes of data loss)|
+| Automated failover | Yes | No |
+| Support for user-defined replication delay | No | Yes|
+| Support for different data or schema vs primary | No | Yes|
+
+
+### Aurora Serverless
 Aurora Serverless is a simple, on-demand, autoscaling configuration for the MySQL/PostgreSQl-compatible editions of Aurora. With Aurora Serveress, your instance automatically scales up or down and starts on or off based on your application usage. The use cases for this service are infrequent, intermittent, and unpredictable workloads.
 * This also makes it possible cheaper because you only pay per invocation
 * With Aurora Serverless, you simply create a database endpoint, optionally specify the desired database capacity range, and connect your applications.
 * It removes the complexity of managing database instances and capacity. The database will automatically start up, shut down, and scale to match your application's needs. It will seamlessly scale compute and memory capacity as needed, with no disruption to client connections.
 
 
-### Aurora Cluster Endpoints:
+### Aurora Cluster Endpoints
 Using cluster endpoints, you map each connection to the appropriate instance or group of instances based on your use case.
 
 You can connect to cluster endpoints associated with different roles or jobs across your Aurora DB. This is because different instances or groups of instances perform different functions.
@@ -1590,6 +1599,18 @@ Global Tables is a multi-region, multi-master replication solution for fast loca
 * **It is based on DynamoDB streams** and is multi-region redundant for data recovery or high availability purposes. Application failover is as simple as redirecting your application’s DynamoDB calls to another AWS region.
 * Global Tables eliminates the difficult work of replicating data between regions and resolving update conflicts, enabling you to focus on your application’s business logic. You do not need to rewrite your applications to make use of Global Tables.
 * Replication latency with Global Tables is typically under one second.
+
+### DynamoDB vs Cassandra
+
+https://www.kdnuggets.com/2018/08/dynamodb-vs-cassandra.html
+
+
+
+
+
+
+
+
 
 
 # Redshift
@@ -2035,4 +2056,162 @@ AWS Config allows you to do the following: ·
 * Retrieve historical configurations of one or more resources. ·
 * Receive a notification whenever a resource is created, modified, or deleted.
 * View relationships between resources. For example, you might want to find all resources that use a particular security group.
+
+
+
+# Amazon QuickSight
+Amazon QuickSight is a scalable, serverless, embeddable, machine learning-powered business intelligence (BI) service built for the cloud. QuickSight lets you easily create and publish interactive BI dashboards that include Machine Learning-powered insights. QuickSight dashboards can be accessed from any device, and seamlessly embedded into your applications, portals, and websites.
+
+* connects to your data in the cloud, combines data from many different sources like AWS data, third-party data, big data, spreadsheet data, SaaS data, B2B data, and more
+* Fully managed cloud-based service,
+* provides enterprise-grade security, global availability, and built-in redundancy.
+* provides the user-management tools to scale from 10 users to 10,000, all with no infrastructure to deploy or manage.
+* saves your prepared data either in SPICE memory or as a direct query
+
+### SPICE 
+SPICE is the Super-fast, Parallel, In-memory Calculation Engine in QuickSight.
+
+SPICE is engineered to
+1. rapidly perform advanced calculations and serve data.
+2. The storage and processing capacity available in SPICE speeds up the analytical queries that you run against your imported data.
+
+By using SPICE, you save time because you don't need to retrieve the data every time that you change an analysis or update a visual.
+
+
+### Dashboard
+In Amazon QuickSight, a data dashboard is a collection of charts, graphs, and insights. It's like a newspaper that's all about the data that you're interested in, except it has digital pages. Instead of reading it, you interact with it.
+
+Dashboard can also be embedded into external application or websites
+
+You can also
+1. Sign up to receive Dashboard Emails
+2. Sign up for Anomaly alerts
+3. Filter to refine the data displayed in visual. Filter is applied before any aggregrate functions
+
+
+Quicksight provides a free trial subscription for four users for two months
+1. Standard
+2. Enterprise: You can choose Use Role Based Federation (SSO) or Active Directory
+
+### Quicksight Data Sources
+1.  Uploaded CSV (upto 1GB)
+2. AWS S3 ( using manifest files to define data)
+3. RDS or Aurora or EC2 hosted DB
+4. Redshift
+5. Athena, Presto to query data stored in S3
+6. AWS IOT analytics
+7. SaaS data like Jira, ServiceNow
+8. Spark 2.0 (only with LDAP authentication)
+
+
+Supported formats are JSON, CSV, XML, XLS
+I did not find Parquet format listed
+
+DynamoDB as a datasource is not available in quicksight
+
+You can use Athena to query DynaboDB and make these available, the problem being that athena queries you have to manually call
+
+OR 
+1 - Create a Glue Crawler which takes DynamoDB table as a Data Source and writes documents to a Glue Table. (Let's say Table X)
+2 - Create a Glue Job which takes 'Table X' as a data source and writes them into a S3 Bucket in parquet format. (Let's say s3://table-x-parquets)
+3 - Create a Glue Crawler which takes 's3://table-x-parquets' as data source and creates a new Glue Table from it. (Let's say Table Y)
+Now you can execute Athena queries in Table Y and also you can use it as Data Set in Quicksight.
+
+OR
+
+You can use DynamoDB Streams to upload the changes to S3 (this is pretty close to realtime), the problem being you will have multiple records (one before update one after)
+
+### Data Management
+
+* You need to import the data to SPICE for quicker analysis (1000GB limit ???)
+* If you dont import data, you will have to complete your query within 2 minute timeout window
+
+
+The amount of SPICE capacity a dataset uses isn't the same as the size of its source file or table.
+* The logical size computation occurs after all the data type transformations and calculated columns you define during data preparation.
+* These fields are materialized in SPICE in a way that enhances query performance.
+* Any changes you make in an analysis have no effect on the logical size of the data in SPICE.
+* Only changes that are saved in the data et apply to SPICE capacity.
+
+The data refreshes
+1. AUTOMATICALLY when you open an associated dataset, analysis, or dashboard
+2. MANUALLY
+3. via API
+4. on a SCHEDULE ( Daily, Weekly, Monthly for Standard Customers, HOURLY for enterprise customers)
+
+
+NOT FOR REALTIME because data will be pulled from various sources
+MAYBE USE ElasticSearch and Kibana for visualization instead
+
+### Visualizations
+
+You can
+1. Choose fields, eg Date vs Unique Visitors, apply aggregrations
+2. Create New Fields, based on functions like ifelse, floor, formatDate
+3. Create visuals using AutoGraph or choose from options like Scatter Graph, 
+
+
+# AWS Glue
+
+AWS Glue is a fully managed ETL (extract, transform, and load) service to categorize, clean, validate, format, enrich and move your data between various data stores and data streams.
+
+AWS Glue consists of a central metadata repository known as the AWS Glue Data Catalog, an ETL engine that automatically generates Python or Scala code, and a flexible scheduler that handles dependency resolution, job monitoring, and retries.
+
+AWS Glue is serverless, so there’s no infrastructure to set up or manage.
+
+
+|                   | Data Lake                          |     Data Warehouse                        |
+|-------------------|------------------------------------|-------------------------------------------|
+| Data Structure    |          Raw                       |     Processed                             |
+| Purpose of Data   |       Not Yet Determined           |     Currently In Use                      |
+| Users             |         Data Scientists            |     Business Professionals                |
+| Accessibility     | Highly accessible, quick to update |  More complicated, costly to make changes |
+
+
+
+AWS Glue runs your ETL jobs
+1. in an Apache Spark serverless environment.
+2. on virtual resources that it provisions and manages in its own service account.
+
+
+AWS Glue supports the following datasources
+1. Amazon S3
+2. Amazon RDS
+3. Third-party JDBC-accessible databases
+4. Amazon DynamoDB
+5. MongoDB and Amazon DocumentDB (with MongoDB compatibility)
+6. Amazon Kinesis Data Streams
+7. Apache Kafka
+
+Targets could be:
+1. S3
+2. RDS
+3. Third-party JDBC-accessible databases
+4. Amazon DynamoDB
+
+
+How it works:
+
+1. AWS Glue consists of a CRAWLER which updates a AWS GLUE DATA CATALOG with metadata table definitions.
+   You point your crawler at a data store, and the crawler creates table definitions in the Data Catalog.
+   For streaming sources, you manually define Data Catalog tables and specify data stream properties.
+2. AWS Glue can generate a script to transform your data. Or, you can provide the script in the AWS Glue console or API.
+3. You can run your GLUE JOBS on demand, or you can set it up to start when a specified TRIGGER occurs. The trigger can be a time-based schedule or an event.
+4. Glue Workflows - A workflow is a container for a set of related jobs, crawlers, and triggers in AWS Glue. Using a workflow, you can design a complex multi-job extract, transform, and load (ETL) activity that AWS Glue can execute and track as single entity.
+5. Glue  ML transforms - ML related transforms
+6. Glue devendpoints - for developing Glue jobs in Notebooks
+
+When your job runs, a script extracts data from your data source, transforms the data, and loads it to your data target.
+The script runs in an Apache Spark environment in AWS Glue.
+
+However it is not a replacement for EMR, as the configuration options are limited. Scaling parameters are limited to the WorkerType and NumberOfWorkers, or the magic MaxCapacity. The cluster size does not automatically scale with files opened outside of the Glue SDK.
+
+
+|             |        AWS Glue 						|            AWS EMR 								|
+|-------------|-----------------------------------------|---------------------------------------------------|
+| Deployment  | Serverless 	  			                |	Choose servers, use spot instances etc          |
+| Cost        | Very costly, around $21 per day         |   Around $14-16 per day for similar configuration |
+| Operations  | Only ETL 						        |   ELT, ML, SQL queries, Presto, Streaming         |
+| Temp files  | being serverless, no temp files support |   Can store temp files , if neeed                 |
+
 
