@@ -275,6 +275,29 @@ An internet gateway serves two purposes: to provide a target in your VPC route t
 
 An internet gateway supports IPv4 and IPv6 traffic. It does not cause availability risks or bandwidth constraints on your network traffic. There's no additional charge for having an internet gateway in your account.
 
+### Domain Name Service
+
+Domain Name System (DNS) is a standard by which names used on the Internet are resolved to their corresponding IP addresses. A DNS hostname is a name that uniquely and absolutely names a computer; it's composed of a host name and a domain name. DNS servers resolve DNS hostnames to their corresponding IP addresses.
+
+Your VPC has attributes that determine whether instances launched in the VPC receive public DNS hostnames that correspond to their public IP addresses, and whether DNS resolution through the Amazon DNS server is supported for the VPC.
+
+| Attribute |	Description |
+|-----------|---------------|
+| enableDnsHostnames | Indicates whether instances with public IP addresses get corresponding public DNS hostnames. <br> If this attribute is true, instances in the VPC get public DNS hostnames, but only if the enableDnsSupport attribute is also set to true.|
+| enableDnsSupport | Indicates whether the DNS resolution is supported. <br> If this attribute is false, the Amazon Route 53 Resolver server that resolves public DNS hostnames to IP addresses is not enabled. <br> If this attribute is true, queries to the Amazon provided DNS server at the 169.254.169.253 IP address, or the reserved IP address at the base of the VPC IPv4 network range plus two will succeed. For more information, see Amazon DNS server.|
+
+
+
+The following rules apply:
+* If both attributes are set to true, the following occurs:
+  * Instances with a public IP address receive corresponding public DNS hostnames.
+  * The Amazon Route 53 Resolver server can resolve Amazon-provided private DNS hostnames.
+* If either or both of the attributes is set to false, the following occurs:
+  * Instances with a public IP address do not receive corresponding public DNS hostnames.
+  * The Amazon Route 53 Resolver cannot resolve Amazon-provided private DNS hostnames.
+  * Instances receive custom private DNS hostnames if there is a custom domain name in the DHCP options set. If you are not using the Amazon Route 53 Resolver server, your custom domain name servers must resolve the hostname as appropriate.
+
+
 ### Bastion Hosts
 Bastion Hosts are special purpose computers designed and configured to withstand attacks. This server generally runs a single program and is stripped beyond this purpose in order to reduce attack vectors.
 
