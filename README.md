@@ -1394,6 +1394,33 @@ In computing, the same-origin policy is an important concept where a web browser
 * When someone attempts the malicious calls, your browser will read the CORS headers and it will not allow the request to take place thus protecting you from the attack.
 
 
+# AWS AppSync
+
+### GraphQL
+GraphQL is a query language for APIs where a client can specify exactly the data it needs by interacting with a single endpoint exposed by a GraphQL backend that is able to retrieve data from multiple sources. It makes it a very suitable technology for unifying multiple existing services behind a single, coherent and unified gateway that manages clients access and can retrieve data from multiple sources with a single network call.
+
+AWS AppSync is a managed service that uses GraphQL to make it easy for applications to get exactly the data they need by letting you create a flexible API to securely access, manipulate, and combine data from one or more data sources.
+
+AWS AppSync is 
+* a fully managed service
+* makes it easy to develop GraphQL APIs by handling the heavy lifting of securely connecting to data sources like AWS DynamoDB, Lambda etc 
+* makes it easy to add caches to improve performance
+* subscriptions to support real-time updates, and client-side data stores that keep off-line clients in sync are just as easy.
+* Once deployed, AWS AppSync automatically scales your GraphQL API execution engine up and down to meet API request volumes.
+
+![img](imgs/appsync.png)
+
+
+# AWS Amplify
+The Amplify Framework allows developers to create, configure, interact and implement scalable mobile and web apps powered by AWS. Amplify seamlessly provisions and manages your mobile backend and provides a simple framework to easily integrate your backend with your iOS, Android, Web, and React Native frontends. Amplify also automates the application release process of both your frontend and backend allowing you to deliver features faster.
+
+Amplify supports 
+1. popular web frameworks including JavaScript, React, Angular, Vue, Next.js, 
+2. mobile platforms including Android, iOS, React Native, Ionic, Flutter (Preview).
+
+
+
+
 # Relational Database Service (RDS)
 RDS is a managed service that makes it easy to set up, operate, and scale a relational database in AWS. It provides cost-efficient and resizable capacity while automating or outsourcing time-consuming administration tasks such as hardware provisioning, database setup, patching and backups.
 
@@ -1917,11 +1944,11 @@ Once authenticated into an identity provider (say with Facebook as an example), 
 ![img](imgs/cognito.png)
 
 * Cognito's job is broker between your app and legitimate authenticators.
-* Cognito User Pools are user directories that are used for sign-up and sign-in functionality on your application. Successful authentication generates a JSON web token. Remember user pools to be user based. It handles registration, recovery, and authentication.
-* Cognito Identity Pools are used to allow users temp access to direct AWS Services like S3 or DynamoDB. Identity pools actually go in and grant you the IAM role.
+* **Cognito User Pools are user directories that are used for sign-up and sign-in functionality on your application. Successful authentication generates a JSON web token. Remember user pools to be user based. It handles registration, recovery, and authentication.**
+* **Cognito Identity Pools are used to allow users temp access to direct AWS Services like S3 or DynamoDB. Identity pools actually go in and grant you the IAM role.**
 
 * SAML-based authentication can be used to allow AWS Management Console login for non-IAM users.
-* In particular, you can use Microsoft Active Directory which implements Security Assertion Markup Language (SAML) as well.
+* You can use Microsoft Active Directory which implements Security Assertion Markup Language (SAML) as well.
 * You can use Amazon Cognito to deliver temporary, limited-privilege credentials to your application so that your users can access AWS resources.
 * Amazon Cognito identity pools support both authenticated and unauthenticated identities.
 * You can retrieve a unique Amazon Cognito identifier (identity ID) for your end user immediately if you're allowing unauthenticated users or after you've set the login tokens in the credentials provider if you're authenticating users.
@@ -1980,6 +2007,7 @@ AWS Directory Service provides multiple ways to use Amazon Cloud Directory and M
 Directories store information about users, groups, and devices, and administrators use them to manage access to information and resources.
 
 AWS Directory Service provides multiple directory choices for customers who want to use existing Microsoft AD or Lightweight Directory Access Protocol (LDAP)–aware applications in the cloud. It also offers those same choices to developers who need a directory to manage users, groups, devices, and access.
+
 
 # IoT Core
 AWS IoT Core is a managed cloud service that lets connected devices easily and securely interact with cloud applications and other devices.
@@ -2056,6 +2084,10 @@ AWS Config allows you to do the following: ·
 * Retrieve historical configurations of one or more resources. ·
 * Receive a notification whenever a resource is created, modified, or deleted.
 * View relationships between resources. For example, you might want to find all resources that use a particular security group.
+
+
+#AWS IoT Greengrass
+AWS IoT Greengrass seamlessly extends AWS onto physical devices, so they can act locally on the data they generate, while still using the cloud for management, analytics, and durable storage. AWS IoT Greengrass ensures your devices can respond quickly to local events and operate with intermittent connectivity. AWS IoT Greengrass minimizes the cost of transmitting data to the cloud by enabling you to author custom software and AWS Lambda functions that run on local devices.
 
 
 
