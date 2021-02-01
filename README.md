@@ -1399,6 +1399,21 @@ In computing, the same-origin policy is an important concept where a web browser
 ### GraphQL
 GraphQL is a query language for APIs where a client can specify exactly the data it needs by interacting with a single endpoint exposed by a GraphQL backend that is able to retrieve data from multiple sources. It makes it a very suitable technology for unifying multiple existing services behind a single, coherent and unified gateway that manages clients access and can retrieve data from multiple sources with a single network call.
 
+* GraphQL is fast and flexible compared to REST
+* In GraphQL the client decides what data to receive not the server like in REST
+* GraphQL can operate over HTTP
+* Fewer HTTP Requests
+* Flexible Data Querying and less code to maintain
+
+![img](imgs/graphql.png)
+
+##### Main GraphQL Operations
+1. **Query**: Fetch the data from GraphQL API (like GET in REST)
+2. **Mutation**: Change data - Create/Update/Delete (like POST, PUT, DELETE in REST)
+3. **Subscriptions**: Watch data for changes in Real time through WebSockets in GraphQL
+
+
+
 AWS AppSync is a managed service that uses GraphQL to make it easy for applications to get exactly the data they need by letting you create a flexible API to securely access, manipulate, and combine data from one or more data sources.
 
 AWS AppSync is 
@@ -1755,6 +1770,17 @@ Simple Notification Service is a pushed-based messaging service that provides a 
 * SNS has flexible message delivery over multiple transport protocols and has a simple API.
 
 
+# SQS vs SNS
+
+| Feature | SQS | SNS |
+|---------|-----|-----|
+| Entity Type         | Queue (Similar to JMS) | Topic (PubSub System) |
+| Message Consumption | Pull Mechanism         | Push Mechanism        |
+| Use Case            | Decoupling applications and allowing parallel asyn processing | Fanout — Meaning allowing same message to be processed in multiple ways|
+| Persistence         | Messages are persisted for some (configurable) duration is no consumer available | No persistence. Whichever consumer is present at the time of message arrival, get the message and the message is deleted. If no consumers available then the message is lost.|
+| Consumer Type       | All the consumers are supposed to be identical and hence process the messages in exact same way | All the consumers are (supposed to be) processing the messages in different ways |
+
+
 # Kinesis
 Amazon Kinesis makes it easy to collect, process, and analyze real-time, streaming data so you can get timely insights and react quickly to new information. With Amazon Kinesis, you can ingest real-time data such as video, audio, application logs, website clickstreams, and IoT telemetry data for machine learning, analytics, and other applications. Amazon Kinesis enables you to process and analyze data as it arrives and respond instantly instead of having to wait until all your data is collected before the processing can begin.
 
@@ -1785,7 +1811,16 @@ Amazon Kinesis Firehose is the easiest way to load streaming data into data stor
 ### Kinesis Analytics
 Kinesis Analytics works with both Kinesis Streams and Kinesis Firehose and can analyze data on the fly. The data within Kinesis Analytics also gets sent elsewhere once it is finished processing. It analyzes your data inside of the Kinesis service itself.
 
+### Kinesis vs SQS
 
+| Feature | Kinesis | SQS |
+|---------|---------|-----|
+| Read | From any point | last message from stack |
+| Consumers | Multiple Consumers | One Consumer per message, with consumer marking message as processed |
+| Delay message | Not Supported | Supported |
+| Dead Letter Queue | Not Supported | Supported |
+| Scalability | Configured by number of shards | Infinitely scalable |
+| Billing | Per hour per shard | Number of puts |
 
 
 # Simple Workflow Service
