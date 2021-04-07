@@ -41,7 +41,7 @@ IAM Key Details:
 * **IAM is a global AWS services** that is not limited by regions. Any user, group, role or policy is accessible globally. 
 * The root account with complete admin access is the account used to sign up for AWS. Therefore, the email address used to create the AWS account for use should probably be the official company email address. 
 * New users have no permissions when their accounts are first created. This is a secure way of delegating access as permissions must be intentionally granted. 
-* When joining the AWS ecosystem for the first time, new users are supplied an access key ID and a secret access key ID when you grant them programmatic access. These are created just once specifically for the new user to join, so if they are lost simply generate a new access key ID and a new secret access key ID. <br> 
+* When joining the AWS ecosystem for the first time, new users are supplied an access key ID and a secret access key ID when you grant them programmatic access. These are created just once specifically for the new user to join, so if they are lost simply generate a new access key ID and a new secret access key ID.  
   **Access keys are only used for the AWS CLI and SDK so you cannot use them to access the console.**
 * When creating your AWS account, you may have an existing identity provider internal to your company that offers Single Sign On (SSO). If this is the case, it is useful,  efficient, and entirely possible to reuse your existing identities on AWS. To do this, you let an IAM role be assumed by one of the Active Directories. This is because the IAM ID Federation feature allows an external service to have the ability to assume an IAM role. 
 * **IAM Roles can be assigned to a service**, such as an EC2 instance, prior to its first use/creation or after its been in use/created. You can change permissions as many times as you need. This can all be done by using both the AWS console and the AWS command line tools.
@@ -835,17 +835,18 @@ Placement groups balance the tradeoff between risk tolerance and network perform
 The more you care about risk, the more isolated you want your instances to be from each other. The more you care about performance, the more conjoined you want your instances to be with each other.
 
 There are three different types of EC2 placement groups:
-1. **Clustered Placement Grouping** is when you put all of your EC2 instances in a single availability zone. This is recommended for applications that need the lowest latency possible and require the highest network throughput. 
-   <br>Only certain instances can be launched into this group (compute optimized, GPU optimized, storage optimized, and memory optimized).
-2. **Spread Placement Grouping** is when you put each individual EC2 instance on top of its own distinct hardware so that failure is isolated.
-  <br>Your VMs live on separate racks, with separate network inputs and separate power requirements. Spread placement groups are recommended for applications that have a small number of critical instances that should be kept separate from each other.
-3. **Partitioned Placement Grouping** is similar to Spread placement grouping, but differs because you can have multiple EC2 instances within a single partition. Failure instead is isolated to a partition (say 3 or 4 instances instead of 1), yet you enjoy the benefits of close proximity for improved network performance.
-  <br>With this placement group, you have multiple instances living together on the same hardware inside of different availability zones across one or more regions.
-  <br>If you would like a balance of risk tolerance and network performance, use Partitioned Placement Groups.
+1. **Clustered Placement Grouping** is when you put all of your EC2 instances in a single availability zone. This is recommended for applications that need the lowest latency possible and require the highest network throughput.   
+   - Only certain instances can be launched into this group (compute optimized, GPU optimized, storage optimized, and memory optimized).
+2. **Spread Placement Grouping** is when you put each individual EC2 instance on top of its own distinct hardware so that failure is isolated.   
+   - Your VMs live on separate racks, with separate network inputs and separate power requirements. 
+   - Spread placement groups are recommended for applications that have a small number of critical instances that should be kept separate from each other.
+3. **Partitioned Placement Grouping** is similar to Spread placement grouping, but differs because you can have multiple EC2 instances within a single partition. Failure instead is isolated to a partition (say 3 or 4 instances instead of 1), yet you enjoy the benefits of close proximity for improved network performance.  
+   - With this placement group, you have multiple instances living together on the same hardware inside of different availability zones across one or more regions.  
+   - If you would like a balance of risk tolerance and network performance, use Partitioned Placement Groups.
 
-* Each placement group name within your AWS must be unique
-* You can move an existing instance into a placement group guaranteed that it is in a stopped state. You can move the instance via the CLI or an AWS SDK, but not the console. 
-* You can also take a snapshot of the existing instance, convert it into an AMI, and launch it into the placement group where you desire it to be.
+- Each placement group name within your AWS must be unique
+- You can move an existing instance into a placement group guaranteed that it is in a stopped state. You can move the instance via the CLI or an AWS SDK, but not the console. 
+- You can also take a snapshot of the existing instance, convert it into an AMI, and launch it into the placement group where you desire it to be.
 
 
 # Elastic Block Store (EBS)
@@ -899,10 +900,11 @@ EBS Snapshots are point in time copies of volumes. You can think of Snapshots as
 * When creating a snapshot for a future root device, it is considered a best practice to stop the running instance where the original device is before taking the snapshot.
 * The easiest way to move an EC2 instance and a volume to another availability zone is to take a snapshot.
 * When creating an image from a snapshot, if you want to deploy a different volume type for the new image (e.g. General Pupose SSD -> Throughput Optimized HDD) then you must make sure that the virtualization for the new image is hardware-assisted.
+
 ![img](imgs/ebs-snapshot.png)
 
-A short summary for creating copies of EC2 instances:<br>
-Old instance -> Snapshot -> Image (AMI) -> New instance
+A short summary for creating copies of EC2 instances:  
+>  Old instance -> Snapshot -> Image (AMI) -> New instance
 
 * You cannot delete a snapshot of an EBS Volume that is used as the root device of a registered AMI. If the original snapshot was deleted, then the AMI would not be able to use it as the basis to create new instances. For this reason, AWS protects you from accidentally deleting the EBS Snapshot, since it could be critical to your systems. To delete an EBS Snapshot attached to a registered AMI, first remove the AMI, then the snapshot can be deleted.
 
@@ -1414,13 +1416,14 @@ GraphQL is a query language for APIs where a client can specify exactly the data
 
 
 
+
 AWS AppSync is a managed service that uses GraphQL to make it easy for applications to get exactly the data they need by letting you create a flexible API to securely access, manipulate, and combine data from one or more data sources.
 
 AWS AppSync is 
 * a fully managed service
 * makes it easy to develop GraphQL APIs by handling the heavy lifting of securely connecting to data sources like AWS DynamoDB, Lambda etc 
 * makes it easy to add caches to improve performance
-* subscriptions to support real-time updates, and client-side data stores that keep off-line clients in sync are just as easy.
+* **subscriptions** to support real-time updates, and client-side data stores that keep off-line clients in sync are just as easy.
 * Once deployed, AWS AppSync automatically scales your GraphQL API execution engine up and down to meet API request volumes.
 
 ![img](imgs/appsync.png)
