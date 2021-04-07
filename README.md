@@ -1,3 +1,6 @@
+In this post, I will share few of my notes that might be useful if you are preparing to get the AWS Solution Architect Certification. 
+Apart from this I suggest go through AWS documentation for more details.
+
 # Well-Architected Framework
 The five pillars are —
 * Operational Excellence
