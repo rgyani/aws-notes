@@ -318,11 +318,12 @@ VPC Endpoints ensure that you can connect your VPC to supported AWS services wit
 
 * These work basically by attaching an ENI to an EC2 instance that can easily communicate to a wide range of AWS services.
 
-* Gateway Endpoints rely on creating entries in a route table and pointing them to private endpoints used for S3 or DynamoDB. Gateway Endpoints are mainly just a target that you set.
+* Gateway Endpoints (only for DynamoDB and S3) rely on creating entries in a route table and pointing them to private endpoints used for S3 or DynamoDB. Gateway Endpoints are mainly just a target that you set.
 * Interface Endpoints use AWS PrivateLink and have a private IP address so they are their own entity and not just a target in a route table. Because of this, they cost $.01/hour. Gateway Endpoints are free as they’re just a new route in to set.
 * Interface Endpoint provisions an Elastic Network interface or ENI (think network card) within your VPC. They serve as an entry and exit for traffic going to and from another supported AWS service. It uses a DNS record to direct your traffic to the private IP address of the interface. Gateway Endpoint uses route prefix in your route table to direct traffic meant for S3 or DynamoDB to the Gateway Endpoint (think 0.0.0.0/0 -> igw).
 
-![img](imgs/vpc-endpoint.png)
+![img](imgs/vpc-endpoint.png)   
+
 To secure your Interface Endpoint, use Security Groups. But to secure Gateway Endpoint, use VPC Endpoint Policies.
 
 
@@ -333,7 +334,7 @@ VPC peering allows you to connect one VPC with another via a direct network rout
 * VPC Peering is usually done in such a way that there is one central VPC that peers with others. Only the central VPC can talk to the other VPCs.
 * You cannot do transitive peering for non-central VPCs. Non-central VPCs cannot go through the central VPC to get to another non-central VPC. You must set up a new portal between non-central nodes if you need them to talk to each other.
 
-*The following diagram highlights the above idea. VPC B is free to communicate with VPC A with VPC Peering enabled between both. However, VPC B cannot continue the conversation with VPC C. Only VPC A can communicate with VPC C.
+*The following diagram highlights the above idea. VPC B is free to communicate with VPC A with VPC Peering enabled between both. However, VPC B cannot continue the conversation with VPC C. Only VPC A can communicate with VPC C.   
 ![img](imgs/peering.png)
 
 It is worth knowing what VPC peering configurations are not supported:
@@ -608,10 +609,10 @@ The following diagram highlights how Pre-signed URLs work:
 ![img](imgs/s3-presigned-urls.png)
 
 ### Headers
-For Amazon S3 REST API calls, you have to include the following HTTP Request Headers:
-x-amz-server-side-encryption-customer-algorithm
-x-amz-server-side-encryption-customer-key
-x-amz-server-side-encryption-customer-key-MD5
+For Amazon S3 REST API calls, you have to include the following HTTP Request Headers:  
+* x-amz-server-side-encryption-customer-algorithm  
+* x-amz-server-side-encryption-customer-key  
+* x-amz-server-side-encryption-customer-key-MD5   
 
 For pre-signed URLs, you should specify the algorithm using the x-amz-server-side-encryption-customer-algorithm request header.
 
@@ -815,12 +816,12 @@ The following table highlights the many instance states that a VM can be in at a
 
 | Instance state|	Description|	Billing|
 |---------------|---------------|-----------|
-| pending | The nstance is preparing to enter the running state. An instance enters the pending state when it launches for the first time, or when it is started after being in the stopped state.| Not billed |
+| pending | The instance is preparing to enter the running state. An instance enters the pending state when it launches for the first time, or when it is started after being in the stopped state.| Not billed |
 | running |	The instance is running and ready for use. |	Billed |
 | stopping |	The instance is preparing to be stopped or stop-hibernated.	| Not billed if preparing to stop. Billed if preparing to hibernate |
 | stopped |	The instance is shut down and cannot be used. The instance can be started at any time. | Not billed |
 | shutting-down | The instance is preparing to be terminated. | Not billed |
-| terminated	| The instance has been permanently deleted and cannot be started. |	Not billed |
+| terminated	| The instance has been permanently deleted and cannot be re-started. |	Not billed |
 
 **Note: Reserved Instances that are terminated are billed until the end of their term.**
 
@@ -1740,11 +1741,11 @@ SQS is a web-based service that gives you access to a message queue that can be 
 * In a hypothetical AWS environment running without SQS, Application A would pass Application B data regardless if Application B was ready to receive the info. With SQS however, there is an intermediary step where the data is stored temporarily in a buffer. It waits there until Application B pulls the temporarily stored data. SQS is not a push-based service, so it is necessary for SQS to work in tandem with another service that queries it for information.
 * There are two types of SQS queues; Standard and FIFO.
   
-  | Feature | Standard SQS | FIFO SQS |
-  |---------|--------------|----------|
-  | Message Order |Standard queues may be received out of order based on message size or however else the SQS queues decide to optimize.| FIFO queues guarantees that the order of messages that went into the queue is the same as the order of messages that leave it.|
- | Message Delivery| Standard SQS queues guarantee that a message is delivered at least once and because of this, it is possible on occasion that a message might be delivered more than once due to the asynchronous and highly distributed architecture.|FIFO SQS queues guarantee exactly-once processing|
-  | Throughput| With standard queues, you have a nearly unlimited number of transactions per second| FIFO SQS is limited to 300 transactions per second|
+| Feature | Standard SQS | FIFO SQS |
+|---------|--------------|----------|
+| Message Order |Standard queues may be received out of order based on message size or however else the SQS queues decide to optimize.| FIFO queues guarantees that the order of messages that went into the queue is the same as the order of messages that leave it.|
+| Message Delivery| Standard SQS queues guarantee that a message is delivered at least once and because of this, it is possible on occasion that a message might be delivered more than once due to the asynchronous and highly distributed architecture.|FIFO SQS queues guarantee exactly-once processing|
+| Throughput| With standard queues, you have a nearly unlimited number of transactions per second| FIFO SQS is limited to 300 transactions per second|
 
 * Messages in the queue can be kept there from one minute to 14 days and the default retention period is 4 days.
 * Visibility timeouts in SQS are the mechanism in which messages marked for delivery from the queue are given a timeframe to be fully received by a reader. This is done by temporarily making them invisible to other readers. If the message is not fully processed within the time limit, the message becomes visible again. This is another way in which messages can be duplicated. If you want to reduce the chance of duplication, increase the visibility timeout.
