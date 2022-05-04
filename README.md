@@ -192,6 +192,16 @@ The first four IP addresses and the last IP address in each subnet CIDR block ar
 10.0.0.255: Network broadcast address. We do not support broadcast in a VPC, therefore we reserve this address.
 ```
 
+```text
+Quick memo:
+
+/32: no IP can change
+/24: last IP number can change
+/16: last two IP number can change
+/8: last three IP number can change
+/0: all IPs
+```
+
 ### Subnet
 If a network has a large number of hosts without logically grouped subdivisions, managing the many hosts can be a tedious job. Therefore you use subnets to divide a network so that management becomes easier.
 
@@ -439,6 +449,7 @@ To enable access to or from the internet for instances in a subnet in a VPC, you
 * You are limited to running up to 20 on-demand instances, purchasing 20 reserved instances, and requesting 5 spot instances per region
 
 
+![img](imgs/vpc-diagram.png)
 
 
 # S3
